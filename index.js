@@ -284,13 +284,19 @@ MochaJUnitReporter.prototype.getXml = function(testsuites) {
     }
   };
 
+  var xmlObject = {};
+
+  if(this._options.disableRootSuite) {
+    xmlObject.testsuites = testsuites.splice(1);
+  } else {
+    xmlObject.testsuites = [ rootSuite ].concat(testsuites);
+  }
+
   if (stats.pending) {
     rootSuite._attr.skipped = stats.pending;
   }
 
-  return xml({
-    testsuites: [ rootSuite ].concat(testsuites)
-  }, { declaration: true, indent: '  ' });
+  return xml(xmlObject, { declaration: true, indent: '  ' });
 };
 
 /**
